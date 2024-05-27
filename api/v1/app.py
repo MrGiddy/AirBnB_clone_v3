@@ -1,4 +1,5 @@
-"""Instantiates the flask application"""
+#!/usr/bin/python3
+"""Instantiates the HBNB flask application"""
 from flask import Flask
 from models import storage
 from api.v1.views import app_views
@@ -12,6 +13,7 @@ app.register_blueprint(app_views)
 
 @app.teardown_appcontext
 def call_storage_dot_close(exception=None):
+    """Closes the storage connection"""
     storage.close()
 
 

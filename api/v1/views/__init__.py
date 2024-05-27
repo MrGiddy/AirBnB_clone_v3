@@ -1,4 +1,5 @@
-"""Initializes views"""
+#!/usr/bin/python3
+"""Initializes views for the application"""
 from flask import Blueprint
 
 
