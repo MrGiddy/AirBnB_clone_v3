@@ -113,3 +113,51 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_get(self):
+        """
+            Test if get retrieves an object based on its class and ID
+            or returns None if it not found
+        """
+        storage = FileStorage()
+        for c in classes:
+            new_obj = classes[c]()
+            storage.new(new_obj)
+            storage.save()
+            retrieved = storage.get(classes[c], new_obj.id)
+            self.assertTrue(retrieved is new_obj)
+            self.assertEqual(storage.get(classes[c], 'some_id'), None)
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_count(self):
+        """
+        Test if count returns the number of objects in storage matching
+        the given class and if no class is passed, it returns the count
+        of all objects in storage
+        """
+        storage = FileStorage()
+        # Testing that all objects are counted if class name is not given
+        initial_count = storage.count()
+        counter = 0
+        for key in classes.keys():
+            new_obj = classes[key]()
+            storage.new(new_obj)
+            storage.save()
+            counter += 1
+        after_count = storage.count()
+        self.assertEqual(after_count, initial_count + counter)
+
+        # Test that only objects of the class are counted if classname is given
+        for key in classes.keys():
+            initial_count = len(
+                    [
+                        c for c in storage.all().values()
+                        if c.to_dict()['__class__'] == key
+                    ]
+                )
+            new_obj = classes[key]()
+            storage.new(new_obj)
+            storage.save()
+            after_count = storage.count(classes[key])
+            self.assertEqual(initial_count + 1, after_count)
