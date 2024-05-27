@@ -20,6 +20,7 @@ def call_storage_dot_close(exception=None):
 
 @app.errorhandler(404)
 def not_found(e):
+    """Handles 404 errors"""
     return jsonify({"error": "Not found"}), 404
 
 
