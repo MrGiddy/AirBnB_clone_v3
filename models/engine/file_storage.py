@@ -82,7 +82,7 @@ class FileStorage:
             # Get the dictionary of all objects
             all_objects = self.all()
             # Construct the key for the object we want
-            key = f'{cls.__name__}.{id}'
+            key = '{}.{}'.format(cls.__name__, id)
             # Retrieve and return the object
             return all_objects.get(key)
 
